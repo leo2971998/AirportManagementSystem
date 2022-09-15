@@ -1,80 +1,100 @@
 package com.techwave.airportmanagementsystem.model.pojo.database;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-
 @Entity
 public class Pilot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long PilotId;
-    @Column(length = 10)
-    private Integer Ssno;
-    @Column(length = 30)
+    private Long PilotId;
+    @Column(length = 12, unique = true)
+    @Pattern(regexp = "^\\d{12}$", message = "Only allows 12 digit numbers")
+    private String ssNo;
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
     private String PilotName;
+    @Column(length = 10, unique = true)
+    @Pattern(regexp = "^\\d{10}$", message = "Only allows 10 digit numbers")
+    private String licenseNo;
+    @NotBlank(message = "Required")
+    private String Dob;
     @Column(length = 30)
-    private Integer LicenseNo;
-    @Column(length = 30)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate Dob;
-    @Column(length = 30)
+    @NotBlank(message = "Required")
     private String Gender;
-    @Column(length = 30)
-    private String MobileNo;
-    @Column(length = 30)
-    private String Email;
+    @Column(unique = true)
+    @NotBlank(message = "Required")
+    private String mobileNo;
+    @NotBlank(message = "Required")
+    @Email(message = "Email should be valid")
+    @Column(unique = true)
+    private String email;
+    @NotNull(message = "Required")
     @Column(length = 7)
     private Integer HouseNo;
+    @NotBlank(message = "Required")
     @Column(length = 20)
     private String Address;
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
     @Column(length = 20)
     private String City;
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
     @Column(length = 20)
     private String State;
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
     @Column(length = 20)
     private String Country;
-    @Column(length = 20)
-    private Integer PinCode;
-    @OneToOne
+    @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
+    @Column(length = 7)
+    private String PinCode;
+    @OneToOne(mappedBy="AirPlane")
     @JoinColumn(name = "PlaneId")
+
     private Airplane PlaneId;
+
     public Pilot() {
     }
 
-    public Pilot(long pilotId, Integer ssno, String pilotName, Integer licenseNo, LocalDate dob, String gender, String mobileNo, String email, Airplane planeId, Integer houseNo, String address, String city, String state, String country, Integer pinCode) {
+    public Pilot(Long pilotId, String ssNo, String pilotName, String licenseNo, String dob, String gender, String mobileNo, String email, Integer houseNo, String address, String city, String state, String country, String pinCode, Airplane planeId) {
         PilotId = pilotId;
-        Ssno = ssno;
+        this.ssNo = ssNo;
         PilotName = pilotName;
-        LicenseNo = licenseNo;
+        this.licenseNo = licenseNo;
         Dob = dob;
         Gender = gender;
-        MobileNo = mobileNo;
-        Email = email;
-        PlaneId = planeId;
+        this.mobileNo = mobileNo;
+        this.email = email;
         HouseNo = houseNo;
         Address = address;
         City = city;
         State = state;
         Country = country;
         PinCode = pinCode;
+        PlaneId = planeId;
     }
 
-    public long getPilotId() {
+    public Long getPilotId() {
         return PilotId;
     }
 
-    public void setPilotId(long pilotId) {
+    public void setPilotId(Long pilotId) {
         PilotId = pilotId;
     }
 
-    public Integer getSsno() {
-        return Ssno;
+    public String getSsNo() {
+        return ssNo;
     }
 
-    public void setSsno(Integer ssno) {
-        Ssno = ssno;
+    public void setSsNo(String ssNo) {
+        this.ssNo = ssNo;
     }
 
     public String getPilotName() {
@@ -85,19 +105,19 @@ public class Pilot {
         PilotName = pilotName;
     }
 
-    public Integer getLicenseNo() {
-        return LicenseNo;
+    public String getLicenseNo() {
+        return licenseNo;
     }
 
-    public void setLicenseNo(Integer licenseNo) {
-        LicenseNo = licenseNo;
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
     }
 
-    public LocalDate getDob() {
+    public String getDob() {
         return Dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public void setDob(String dob) {
         Dob = dob;
     }
 
@@ -110,27 +130,19 @@ public class Pilot {
     }
 
     public String getMobileNo() {
-        return MobileNo;
+        return mobileNo;
     }
 
     public void setMobileNo(String mobileNo) {
-        MobileNo = mobileNo;
+        this.mobileNo = mobileNo;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
-    }
-
-    public Airplane getPlaneId() {
-        return PlaneId;
-    }
-
-    public void setPlaneId(Airplane planeId) {
-        PlaneId = planeId;
+        this.email = email;
     }
 
     public Integer getHouseNo() {
@@ -173,11 +185,19 @@ public class Pilot {
         Country = country;
     }
 
-    public Integer getPinCode() {
+    public String getPinCode() {
         return PinCode;
     }
 
-    public void setPinCode(Integer pinCode) {
+    public void setPinCode(String pinCode) {
         PinCode = pinCode;
+    }
+
+    public Airplane getPlaneId() {
+        return PlaneId;
+    }
+
+    public void setPlaneId(Airplane planeId) {
+        PlaneId = planeId;
     }
 }

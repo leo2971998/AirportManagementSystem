@@ -1,5 +1,10 @@
 package com.techwave.airportmanagementsystem.model.pojo.database;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,7 +15,7 @@ import javax.persistence.UniqueConstraint;
 public class Airplane {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long PlaneId;
+    private Long PlaneId;
     @Pattern(regexp = "^\\d{10}$", message = "Only allows 10 digit numbers")
     @Column(length = 10, unique = true)
     private String regNo;
@@ -28,7 +33,8 @@ public class Airplane {
     private Integer Capacity;
     @NotBlank(message = "Required")
     @Email(message = "Email should be valid")
-    private String Email;
+    @Column(unique = true)
+    private String email;
     @NotNull(message = "Required")
     @Column(length = 7)
     private Integer HouseNo;
@@ -47,25 +53,30 @@ public class Airplane {
     @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
     @Column(length = 7)
     private String PinCode;
+    public Airplane(){}
 
-    public Airplane() {
-    }
-
-
-    public Airplane(long planeId, String RegNo, String manufacturerName, Integer modelNo, String planeName, Integer capacity, String email, Integer houseNo, String address, String city, String state, String country, String pinCode) {
+    public Airplane(Long planeId, String regNo, String manufacturerName, Integer modelNo, String planeName, Integer capacity, String email, Integer houseNo, String address, String city, String state, String country, String pinCode) {
         PlaneId = planeId;
-        regNo = RegNo;
+        this.regNo = regNo;
         ManufacturerName = manufacturerName;
         ModelNo = modelNo;
         PlaneName = planeName;
         Capacity = capacity;
-        Email = email;
+        this.email = email;
         HouseNo = houseNo;
         Address = address;
         City = city;
         State = state;
         Country = country;
         PinCode = pinCode;
+    }
+
+    public Long getPlaneId() {
+        return PlaneId;
+    }
+
+    public void setPlaneId(Long planeId) {
+        PlaneId = planeId;
     }
 
     public String getRegNo() {
@@ -75,16 +86,6 @@ public class Airplane {
     public void setRegNo(String regNo) {
         this.regNo = regNo;
     }
-
-    public long getPlaneId() {
-        return PlaneId;
-    }
-
-    public void setPlaneId(long planeId) {
-        PlaneId = planeId;
-    }
-
-
 
     public String getManufacturerName() {
         return ManufacturerName;
@@ -119,11 +120,11 @@ public class Airplane {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public Integer getHouseNo() {

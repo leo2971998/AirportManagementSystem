@@ -1,172 +1,63 @@
 package com.techwave.airportmanagementsystem.model.pojo.database;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class HangerDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 10, nullable = false)
-    private int Ssno;
-    @Column(length = 30, nullable = false)
+    private Integer HangerId;
+    @NotBlank(message = "Required")
+    @Column(unique = true)
+    private String ssNo;
+    @NotBlank(message = "Required")
     private String ManagerName;
-    @Column(length = 30, nullable = false)
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
+    @Column
     private String HangerLocation;
-    @Column(length = 30, nullable = false)
-    private int HangerCapacity;
-    @Column(length = 30, nullable = false)
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate Dob;
-    @Column(length = 10, nullable = false)
+    @NotNull(message = "Required")
+    private Integer HangerCapacity;
+    @NotBlank(message = "Required")
+    private String Dob;
+    @NotBlank(message = "Required")
     private String Gender;
-    @Column(length = 20, nullable = false)
-    private String MobileNo;
-    @Column(length = 30)
-    private String Email;
-    @Column(length = 7, nullable = false)
-    private int HouseNo;
-    @Column(length = 20, nullable = false)
+    @Column(unique = true)
+    @NotBlank(message = "Required")
+    @Pattern(regexp = "^\\d{10}$", message = "Only allows 10 digit numbers")
+    private String mobileNo;
+    @NotBlank(message = "Required")
+    @Email(message = "Email should be valid")
+    @Column(unique = true)
+    private String email;
+    @NotNull(message = "Required")
+    @Column(length = 7)
+    private Integer HouseNo;
+    @NotBlank(message = "Required")
+    @Column(length = 20)
     private String Address;
-    @Column(length = 20, nullable = false)
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
+    @Column(length = 20)
     private String City;
-    @Column(length = 20, nullable = false)
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
+    @Column(length = 20)
     private String State;
-    @Column(length = 20, nullable = false)
+    @Pattern(regexp = "^\\p{L}+(?: \\p{L}+)*$", message = "Only allows alphabets and space")
+    @Column(length = 20)
     private String Country;
-    @Column(length = 20, nullable = false)
-    private int PinCode;
-
-    public int getSsno() {
-        return Ssno;
-    }
-
-    public void setSsno(int ssno) {
-        Ssno = ssno;
-    }
-
-    public String getManagerName() {
-        return ManagerName;
-    }
-
-    public void setManagerName(String managerName) {
-        ManagerName = managerName;
-    }
-
-    public String getHangerLocation() {
-        return HangerLocation;
-    }
-
-    public void setHangerLocation(String hangerLocation) {
-        HangerLocation = hangerLocation;
-    }
-
-    public int getHangerCapacity() {
-        return HangerCapacity;
-    }
-
-    public void setHangerCapacity(int hangerCapacity) {
-        HangerCapacity = hangerCapacity;
-    }
-
-    public LocalDate getDob() {
-        return Dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        Dob = dob;
-    }
-
-    public String getGender() {
-        return Gender;
-    }
-
-    public void setGender(String gender) {
-        Gender = gender;
-    }
-
-    public String getMobileNo() {
-        return MobileNo;
-    }
-
-    public void setMobileNo(String mobileNo) {
-        MobileNo = mobileNo;
-    }
-
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public int getHouseNo() {
-        return HouseNo;
-    }
-
-    public void setHouseNo(int houseNo) {
-        HouseNo = houseNo;
-    }
-
-    public String getAddress() {
-        return Address;
-    }
-
-    public void setAddress(String address) {
-        Address = address;
-    }
-
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String city) {
-        City = city;
-    }
-
-    public String getState() {
-        return State;
-    }
-
-    public void setState(String state) {
-        State = state;
-    }
-
-    public String getCountry() {
-        return Country;
-    }
-
-    public void setCountry(String country) {
-        Country = country;
-    }
-
-    public int getPinCode() {
-        return PinCode;
-    }
-
-    public void setPinCode(int pinCode) {
-        PinCode = pinCode;
-    }
-
-    public HangerDetails() {
-    }
-
-    public HangerDetails(int ssno, String managerName, String hangerLocation, int hangerCapacity, LocalDate dob, String gender, String mobileNo, String email, int houseNo, String address, String city, String state, String country, int pinCode) {
-        Ssno = ssno;
-        ManagerName = managerName;
-        HangerLocation = hangerLocation;
-        HangerCapacity = hangerCapacity;
-        Dob = dob;
-        Gender = gender;
-        MobileNo = mobileNo;
-        Email = email;
-        HouseNo = houseNo;
-        Address = address;
-        City = city;
-        State = state;
-        Country = country;
-        PinCode = pinCode;
-    }
+    @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
+    @Column(length = 7)
+    private String PinCode;
 }

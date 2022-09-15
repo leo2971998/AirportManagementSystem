@@ -1,13 +1,21 @@
 package com.techwave.airportmanagementsystem.model.pojo.database;
 
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import org.springframework.data.jpa.repository.Query;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "HangerId",
+                query = "Select Hanger_Id From Hanger_Details;"
+        ),
+        @NamedNativeQuery(
+                name = "PlaneId",
+                query = "Select Plane_Id From Airplane;"
+        )
+})
 public class AllocationKey implements Serializable {
     private static final long serialVersionUID = 1L;
 

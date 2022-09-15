@@ -42,8 +42,8 @@
         </tr>
         <tr>
             <th>Email</th>
-            <th><f:input path="Email"/></th>
-            <th><f:errors path="Email"/></th>
+            <th><f:input path="email"/></th>
+            <th><f:errors path="email"/></th>
         </tr>
         <tr>
             <th>House No</th>

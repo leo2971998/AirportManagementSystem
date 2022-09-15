@@ -3,6 +3,8 @@ package com.techwave.airportmanagementsystem.controllers;
 import com.techwave.airportmanagementsystem.model.dao.DatabaseDao;
 import com.techwave.airportmanagementsystem.model.dao.RegistrationDao;
 import com.techwave.airportmanagementsystem.model.pojo.database.Airplane;
+import com.techwave.airportmanagementsystem.model.pojo.database.HangerDetails;
+import com.techwave.airportmanagementsystem.model.pojo.database.Pilot;
 import com.techwave.airportmanagementsystem.model.pojo.user.Login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -21,6 +24,8 @@ public class HomeController {
     RegistrationDao registrationDao;
     @Autowired
     DatabaseDao databaseDao;
+
+    static List<Airplane> airplaneList = null;
 
     @RequestMapping("/")
     public String Home() {
@@ -58,26 +63,84 @@ public class HomeController {
             return "Admin";
         }
     }
+
     @RequestMapping("/addplane")
     public String addPlane(Model M) {
         M.addAttribute("Airplane", new Airplane());
         return "AddPlane";
     }
+
     @RequestMapping("/addplane/create")
     public String createPlane(@Valid @ModelAttribute("Airplane") Airplane A, BindingResult BS, Model M) {
         if (BS.hasErrors()) {
             return "AddPlane";
-        }
-        else {
+        } else {
             String msg = "";
             if (databaseDao.RegNoExists(A.getRegNo())) {
                 msg = "Registration Number Already Taken";
-            }
-            else {
-                msg = databaseDao.AddPlane(A);
+            } else {
+                if (databaseDao.EmailExists(A.getEmail())) {
+                    msg = "Email Already Taken";
+                } else msg = databaseDao.AddPlane(A);
             }
             M.addAttribute("msg", msg);
             return "AddPlane";
+        }
+    }
+
+    @RequestMapping("/addpilot")
+    public String addPilot(Model M) {
+        airplaneList = databaseDao.loadAirplanes();
+        M.addAttribute("AList", airplaneList);
+        M.addAttribute("Pilot", new Pilot());
+        return "AddPilot";
+    }
+
+    @RequestMapping("/addpilot/create")
+    public String createPilot(@Valid @ModelAttribute("Pilot") Pilot P, BindingResult BS, Model M) {
+        airplaneList = databaseDao.loadAirplanes();
+        M.addAttribute("AList", airplaneList);
+        if (BS.hasErrors()) {
+            return "AddPilot";
+        } else {
+            String msg = "";
+            if (databaseDao.LicenseNoExists(P.getLicenseNo())) {
+                msg = "License No Already Taken";
+            } else {
+                if (databaseDao.PilotEmailExists(P.getEmail())) {
+                    msg = "Email Already Taken";
+                } else if (databaseDao.SsNoExists(P.getSsNo())) {
+                    msg = "Social Security Number Already Taken";
+                } else if (databaseDao.MobileNoExists(P.getMobileNo())) {
+                    msg = "Mobile Number Already Taken";
+                } else msg = databaseDao.AddPilot(P);
+            }
+            M.addAttribute("msg", msg);
+            return "AddPilot";
+        }
+    }
+
+    @RequestMapping("/addhanger")
+    public String addHanger(Model M) {
+        M.addAttribute("Hanger", new HangerDetails());
+        return "AddHanger";
+    }
+
+    @RequestMapping("/addhanger/create")
+    public String createHanger(@Valid @ModelAttribute("Hanger") HangerDetails H, BindingResult BS, Model M) {
+        if (BS.hasErrors()) {
+            return "AddHanger";
+        } else {
+            String msg = "";
+            if (databaseDao.ManagerEmailExists(H.getEmail())) {
+                msg = "Email Already Taken";
+            } else if (databaseDao.HangerSsNoExists(H.getSsNo())) {
+                msg = "Social Security Number Already Taken";
+            } else if (databaseDao.ManagerMobileNoExists(H.getMobileNo())) {
+                msg = "Mobile Number Already Taken";
+            } else msg = databaseDao.AddHanger(H);
+            M.addAttribute("msg", msg);
+            return "AddHanger";
         }
     }
 }
