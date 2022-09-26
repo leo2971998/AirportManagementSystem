@@ -7,10 +7,12 @@ import com.techwave.airportmanagementsystem.model.pojo.database.HangerDetails;
 import com.techwave.airportmanagementsystem.model.pojo.database.Pilot;
 import com.techwave.airportmanagementsystem.model.pojo.user.Login;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +29,20 @@ public class HomeController {
 
     static List<Airplane> airplaneList = null;
 
+   @RequestMapping("/validatelogin")
+    public String ValidateLogin() {
+               Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+                return "redirect:/admin";
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("MANAGER")))
+                return "redirect:/manager";
+            else return "redirect:/login";
+        }
     @RequestMapping("/")
     public String Home() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-            return "redirect:/admin";
-        } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("MANAGER")))
-            return "redirect:/manager";
-        else return "Home";
+        return "Home";
     }
+
 
     @RequestMapping("/admin")
     public String admin() {
@@ -52,18 +59,24 @@ public class HomeController {
         M.addAttribute("Login", new Login());
         return "Register";
     }
-
     @RequestMapping("/register/save")
     public String getUserDetails(@Valid @ModelAttribute("Login") Login login, BindingResult BS, Model M) {
-        if (BS.hasErrors()) {
-            return "Register";
-        } else {
-            String msg = registrationDao.AddUser(login);
+       String msg = "";
+        try {
+            if (BS.hasErrors()) {
+                return "Register";
+            } else {
+                msg = registrationDao.AddUser(login);
+                M.addAttribute("msg", msg);
+                return "redirect:/admin";
+            }
+        }
+        catch (Exception E) {
+            msg = "Email already taken";
             M.addAttribute("msg", msg);
-            return "Admin";
+            return "Register";
         }
     }
-
     @RequestMapping("/addplane")
     public String addPlane(Model M) {
         M.addAttribute("Airplane", new Airplane());
@@ -71,6 +84,7 @@ public class HomeController {
     }
 
     @RequestMapping("/addplane/create")
+    @Transactional
     public String createPlane(@Valid @ModelAttribute("Airplane") Airplane A, BindingResult BS, Model M) {
         if (BS.hasErrors()) {
             return "AddPlane";

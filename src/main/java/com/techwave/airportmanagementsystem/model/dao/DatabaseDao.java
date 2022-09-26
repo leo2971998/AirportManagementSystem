@@ -26,7 +26,6 @@ public class DatabaseDao implements IDatabaseDao {
     }
     @Override
     public String AddPilot(Pilot P) {
-
         pilotRepository.save(P);
         return String.format("Pilot %s added successfully", P.getPilotId());
     }

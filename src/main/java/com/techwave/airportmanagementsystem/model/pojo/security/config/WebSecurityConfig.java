@@ -17,13 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder passwordEncoder;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/registration/**").permitAll()
                 .anyRequest().authenticated().and()
-                .formLogin();
+                .formLogin()
+                .defaultSuccessUrl("/validatelogin", true)
+                .usernameParameter("email").passwordParameter("password");
     }
 
     @Override

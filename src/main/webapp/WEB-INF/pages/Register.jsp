@@ -56,8 +56,8 @@
             <f:errors path = "appUserRole"/>
         </p>
         <button class="btn btn-lg btn-primary btn-block" id="submitForm" type = "submit">Register</button>
+        <a:out value="${msg}"></a:out>
     </f:form>
-    <a:out value="${msg}"></a:out>
 </div>
 </body>
 

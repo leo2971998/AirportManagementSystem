@@ -6,89 +6,74 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="f"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="a"%>
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en">
 <head>
+  <link rel="shortcut icon" type="x-icon" href="/images/favicon.ico">
   <meta charset="UTF-8">
-  <title>Registration and Login System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/style.css">
+  <title>Planecor Management</title>
+  <script>
+    $("#submitForm").click(function() {
+      alert("Registration Successfully.");
+    });
+  </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" th:href="@{/index}">Registration and Login System</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
-        </li>
+
+<section class="tri-header">
+  <nav>
+    <a href="/home"><img src="/images/High Resolution Logo.png"></a>
+    <div class="nav-links">
+      <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/login">Login</a></li>
       </ul>
     </div>
-  </div>
-</nav>
-<br /><br />
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
+  </nav>
+  <div class="login-page">
+    <div class="form">
 
-      <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid Email or Password</div>
-      </div>
-      <div th:if="${param.logout}">
-        <div class="alert alert-success"> You have been logged out.</div>
-      </div>
+      <f:form class="register-form" action="/register/save" modelAttribute="Login">
+        <f:input path = "firstName" placeholder = "First Name"/>
+        <f:errors path = "firstName"/>
+        <f:input path = "lastName" placeholder = "Last Name"/>
+        <f:errors path = "lastName"/>
+        <f:input path = "email" placeholder = "Email"/>
+        <f:errors path = "email"/>
+        <f:input path = "password" cssClass = "form-control" placeholder = "Password" type = "password"/>
+        <f:errors path = "password"/>
+        <button id="submitForm" type = "submit">Register</button>
+        <p class="message">Already Registered? <a href="#">Login</a>
+        </p>
+      </f:form>
+      <f:form action="validatelogin" class="login-form" modelAttribute="Login">
+        <f:input path = "email" placeholder="Email"/>
+        <f:errors path = "email"/>
+        <f:input path = "password" placeholder="Password" type = "password"/>
+        <f:errors path = "password"/>
+        <input type = "submit" value = "Login"/>
 
-      <div class="card">
-        <div class="card-header">
-          <h2 class="text-center">Login Form</h2>
-        </div>
-        <div class="card-body">
-          <form
-                  method="post"
-                  role="form"
-                  th:action="@{/login}"
-                  class="form-horizontal"
-          >
-            <div class="form-group mb-3">
-              <label class="control-label"> Email</label>
-              <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      class="form-control"
-                      placeholder="Enter email address"
-              />
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="control-label"> Password</label>
-              <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      class="form-control"
-                      placeholder="Enter password"
-              />
-            </div>
-            <div class="form-group mb-3">
-              <button type="submit" class="btn btn-primary" >Submit</button>
-              <span> Not registered ?
-                                <a th:href="@{/register}">Register/Signup here</a>
-                            </span>
-            </div>
-          </form>
-        </div>
-      </div>
+        <p class="message">Not Registered? <a href="#">Register</a>
+        </p>
+      </f:form>
+      <a:out value="${msg}"></a:out>
     </div>
   </div>
-</div>
+  <script src='https://code.jquery.com/jquery-3.6.1.min.js
+        '></script>
+  <script>
+    $('.message a').click(function(){
+      $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+    });
+  </script>
+</section>
 </body>
 </html>

@@ -18,7 +18,15 @@ import java.time.LocalDate;
 @Entity
 public class HangerDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "hanger_sequence",
+            sequenceName = "hanger_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "hanger_sequence"
+    )
     private Integer HangerId;
     @NotBlank(message = "Required")
     @Column(unique = true)
