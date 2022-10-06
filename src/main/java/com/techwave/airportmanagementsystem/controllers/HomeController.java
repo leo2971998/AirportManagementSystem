@@ -109,7 +109,25 @@ public class HomeController {
         M.addAttribute("Pilot", new Pilot());
         return "AddPilot";
     }
-
+    @RequestMapping("/getairplanebyid")
+    public String getCustomerById(@RequestParam("airplaneId") Long airplaneID, Model M) {
+        Airplane A = new Airplane();
+        Pilot P = new Pilot();
+        try {
+            A = databaseDao.getAirPlaneByID(airplaneID);
+            P.setAirplaneId(airplaneID);
+            M.addAttribute("AP", A);
+            M.addAttribute("Pilot", P);
+            M.addAttribute("AList", airplaneList);
+            return "AddPilot";
+        } catch (Exception E) {
+            M.addAttribute("AP", A);
+            M.addAttribute("Pilot", new Pilot());
+            M.addAttribute("AList", airplaneList);
+            M.addAttribute("msg", "No Air Plane");
+            return "AddPilot";
+        }
+    }
     @RequestMapping("/addpilot/create")
     public String createPilot(@Valid @ModelAttribute("Pilot") Pilot P, BindingResult BS, Model M) {
         airplaneList = databaseDao.loadAirplanes();

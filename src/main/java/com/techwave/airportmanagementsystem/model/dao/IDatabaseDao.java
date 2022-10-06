@@ -31,4 +31,6 @@ public interface IDatabaseDao {
     boolean ManagerMobileNoExists(String MobileNo);
 
     List<Airplane> loadAirplanes();
+
+    Airplane getAirPlaneByID(Long airplaneId);
 }

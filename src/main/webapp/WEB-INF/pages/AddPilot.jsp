@@ -38,7 +38,7 @@
             </ul>
         </div>
     </nav>
-    <f:form class="hangar-form" action="/addpilot/create" modelAttribute="Pilot">
+    <f:form class="hangar-form" action="/addpilot/create" modelAttribute="Pilot" id ="form1">
         <h1 class="hangar-title">Pilot:</h1>
         <div class="texts">
             <div class="divrow">
@@ -118,11 +118,21 @@
                             <th>Plane Id</th>
                             <th>
                                 <f:select path="airplaneId" name = "airplaneId">
+                                    <f:option value="" disabled="true" selected = "true">Select</f:option>
                                     <a:forEach var = "a" items = "${AList}">
                                         <f:option value="${a.planeId}">${a.planeId}</f:option>
                                     </a:forEach>
                                 </f:select>
                             </th>
+                        </tr>
+                        <tr>
+                            <th>Plane Name</th>
+                            <th>${AP.planeName}</th>
+                            <th><td><input type="submit" id = "fetch" value="Fetch" formaction="getairplanebyid" hidden="hidden"></td></th>
+                        </tr>
+                        <tr>
+                            <th>Manufacturer Name</th>
+                            <th>${AP.manufacturerName}</th>
                         </tr>
                         <tr>
                             <td>
@@ -147,6 +157,11 @@
     <script>
         $(function () {
             $("#datepicker").datepicker({dateFormat: 'dd/mm/yy'});
+        });
+    </script>
+    <script>
+        $('#form1 select').on('change', function() {
+            document.getElementById('fetch').click();
         });
     </script>
 </section>

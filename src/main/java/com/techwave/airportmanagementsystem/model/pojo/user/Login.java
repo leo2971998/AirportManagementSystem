@@ -18,6 +18,7 @@ import java.util.Collections;
 @Setter
 @EqualsAndHashCode
 @Entity
+@Table(name = "AirportLogin")
 public class Login implements UserDetails {
     @Id
     @SequenceGenerator(
