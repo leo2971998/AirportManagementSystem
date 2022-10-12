@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
@@ -14,9 +15,12 @@ import java.time.LocalDate;
 public class HangerAllocation {
     @EmbeddedId
     private AllocationKey allocationKey;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate FromDate;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate ToDate;
-
+    @NotBlank(message = "Required")
+    private String FromDate;
+    @NotBlank(message = "Required")
+    private String ToDate;
+    @Transient
+    private Long airplaneId;
+    @Transient
+    private Long hangarId;
 }

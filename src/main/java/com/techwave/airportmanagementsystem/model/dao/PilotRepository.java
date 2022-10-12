@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-
 public interface PilotRepository extends JpaRepository<Pilot, Long> {
     Optional<Pilot> findByEmail(String Email);
     Optional<Pilot> findByMobileNo(String Email);

@@ -1,54 +1,33 @@
 package com.techwave.airportmanagementsystem.model.pojo.database;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import org.springframework.data.jpa.repository.Query;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Embeddable
-@NamedNativeQueries({
-        @NamedNativeQuery(
-                name = "HangerId",
-                query = "Select Hanger_Id From Hanger_Details;"
-        ),
-        @NamedNativeQuery(
-                name = "PlaneId",
-                query = "Select Plane_Id From Airplane;"
-        )
-})
 public class AllocationKey implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
-    @JoinColumn(name = "HangerId")
-    private HangerDetails HangerId;
+    @JoinColumn(name = "hangerId")
+    private HangerDetails hangerId;
     @OneToOne
-    @JoinColumn(name = "PlaneId")
-    private Airplane PlaneId;
+    @JoinColumn(name="PlaneId")
+    private Airplane airplane;
 
-    public AllocationKey() {
-        super();
-    }
-
-    public AllocationKey(HangerDetails hangerId, Airplane planeId) {
-        super();
-        HangerId = hangerId;
-        PlaneId = planeId;
-    }
-
-    public HangerDetails getHangerId() {
-        return HangerId;
-    }
-
-    public void setHangerId(HangerDetails hangerId) {
-        HangerId = hangerId;
-    }
-
-    public Airplane getPlaneId() {
-        return PlaneId;
-    }
-
-    public void setPlaneId(Airplane planeId) {
-        PlaneId = planeId;
-    }
 }

@@ -1,6 +1,7 @@
 package com.techwave.airportmanagementsystem.model.dao;
 
 import com.techwave.airportmanagementsystem.model.pojo.database.Airplane;
+import com.techwave.airportmanagementsystem.model.pojo.database.HangerAllocation;
 import com.techwave.airportmanagementsystem.model.pojo.database.HangerDetails;
 import com.techwave.airportmanagementsystem.model.pojo.database.Pilot;
 
@@ -11,6 +12,8 @@ public interface IDatabaseDao {
 
     String AddPilot(Pilot P);
     String AddHanger(HangerDetails H);
+
+    String AddHangerAllocation(HangerAllocation H);
 
     boolean RegNoExists(String Regno);
 
@@ -33,4 +36,6 @@ public interface IDatabaseDao {
     List<Airplane> loadAirplanes();
 
     Airplane getAirPlaneByID(Long airplaneId);
+
+    List<HangerDetails> loadHangars();
 }

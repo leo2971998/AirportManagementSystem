@@ -56,7 +56,7 @@ public class Pilot {
     @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
     @Column(length = 7)
     private String PinCode;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "PlaneId")
 
     private Airplane PlaneId;

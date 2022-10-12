@@ -27,7 +27,7 @@ public class HangerDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "hanger_sequence"
     )
-    private Integer HangerId;
+    private Long HangerId;
     @NotBlank(message = "Required")
     @Column(unique = true)
     private String ssNo;
@@ -68,4 +68,5 @@ public class HangerDetails {
     @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
     @Column(length = 7)
     private String PinCode;
+    private String Status;
 }

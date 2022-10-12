@@ -63,5 +63,5 @@ public class Airplane {
     @Pattern(regexp = "^\\d{7}$", message = "Only allows 7 digits number")
     @Column(length = 7)
     private String PinCode;
-
+    private String Status;
 }
