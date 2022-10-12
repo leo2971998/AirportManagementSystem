@@ -37,55 +37,30 @@
             </ul>
         </div>
     </nav>
-    <f:form class="hangar-form" action="/allotplane/create" modelAttribute="HangerAllo" id="form1">
-        <h1 class="hangar-title">Allotting Plane:</h1>
+    <f:form class="hangar-form" action="/gethangerstatus/fetch">
+        <h1 class="hangar-title">Hangar Status:</h1>
         <div class="texts">
             <div class="divrow">
                 <div class="column" style="background-color:#a76d6d;">
                     <table style="border-collapse: separate; border-spacing: 2em 1em;">
                         <tr>
-                            <th>From Date</th>
-                            <th><f:input path="FromDate" type="text" id="datepicker" name="datepicker"
-                                         placeholder="dd/mm/yyyy"/></th>
-                            <th><f:errors path="FromDate"/></th>
-                            <th>To Date</th>
-                            <th><f:input path="ToDate" type="text" id="datepicker1" name="datepicker1"
-                                         placeholder="dd/mm/yyyy"/></th>
-                            <th><f:errors path="ToDate"/></th>
-                        </tr>
-                        <tr>
-                            <th>Plane Id</th>
-                            <th><f:select path="airplaneId" name="airplaneId">
-                                <f:option value="" disabled="true" selected="true">Select</f:option>
-                                <a:forEach var="a" items="${AList}">
-                                    <f:option value="${a.planeId}">${a.planeId}</f:option>
-                                </a:forEach>
-                            </f:select></th>
-                        </tr>
-                        <tr>
                             <th>Hanger ID</th>
                             <th>Hanger Location</th>
-                            <th>Manager Name</th>
-                            <th>Social Security Number</th>
-                            <th>Choose</th>
+                            <th>From Date Booked</th>
+                            <th>To Date Booked</th>
+                            <th>Plane Id</th>
+                            <th>Status</th>
                         </tr>
-                        <a:forEach var="h" items="${hangarList}">
+                        <a:forEach var="h" items="${hangarDetailsList}">
                             <tr>
                                 <th>${h.hangerId}</th>
                                 <th>${h.hangerLocation}</th>
-                                <th>${h.managerName}</th>
-                                <th>${h.ssNo}</th>
-                                <th><input type="radio" name="hangarRadio" style="transform: scale(1.5)" value="${h.hangerId}" required></th>
+                                <th>${h.fromDate}</th>
+                                <th>${h.toDate}</th>
+                                <th>${h.planeId}</th>
+                                <th>${h.status}</th>
                             </tr>
                         </a:forEach>
-                        <tr>
-                            <th colspan="3">
-                                <button type="submit" class="btn btn-success">Book</button>
-                            </th>
-                            <th colspan="3">
-                                <button type="reset" class="btn btn-danger" value="Reset">Reset</button>
-                            </th>
-                        </tr>
                         <a:out value="${msg}"></a:out>
                     </table>
                 </div>

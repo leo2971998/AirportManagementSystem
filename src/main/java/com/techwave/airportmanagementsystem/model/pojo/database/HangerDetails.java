@@ -69,4 +69,11 @@ public class HangerDetails {
     @Column(length = 7)
     private String PinCode;
     private String Status;
+    @Transient
+    private String fromDate;
+    @Transient
+    private String toDate;
+    @Transient
+    private Long planeId;
+
 }

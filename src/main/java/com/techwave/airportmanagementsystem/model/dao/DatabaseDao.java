@@ -112,4 +112,21 @@ public class DatabaseDao implements IDatabaseDao {
     public List<HangerDetails> loadHangars() {
         return hangerRepository.findAll();
     }
+    @Override
+    public List<HangerDetails> loadHangarAllos() {
+        List<HangerAllocation> hangerAllocationList = hangerAllocationRepository.findAll();
+        List<HangerDetails> result = hangerRepository.findAll();
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = 0; j < hangerAllocationList.size(); j++) {
+                if (result.get(i).getHangerId() == hangerAllocationList.get(j).getAllocationKey().getHangerId().getHangerId()) {
+                    HangerDetails temp = result.get(i);
+                    temp.setPlaneId(hangerAllocationList.get(j).getAllocationKey().getAirplane().getPlaneId());
+                    temp.setFromDate(hangerAllocationList.get(j).getFromDate());
+                    temp.setToDate(hangerAllocationList.get(j).getToDate());
+                    result.set(i,temp);
+                }
+            }
+        }
+        return result;
+    }
 }

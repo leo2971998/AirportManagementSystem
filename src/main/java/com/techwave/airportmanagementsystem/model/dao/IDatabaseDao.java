@@ -38,4 +38,6 @@ public interface IDatabaseDao {
     Airplane getAirPlaneByID(Long airplaneId);
 
     List<HangerDetails> loadHangars();
+
+    List<HangerDetails> loadHangarAllos();
 }

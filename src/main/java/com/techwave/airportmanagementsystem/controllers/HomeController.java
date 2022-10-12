@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,8 @@ public class HomeController {
     RegistrationDao registrationDao;
     @Autowired
     DatabaseDao databaseDao;
+
+
 
     @RequestMapping("/validatelogin")
     public String ValidateLogin() {
@@ -46,7 +50,6 @@ public class HomeController {
     public String Home() {
         return "Home";
     }
-
 
     @RequestMapping("/admin")
     public String admin() {
@@ -167,9 +170,7 @@ public class HomeController {
 
     @RequestMapping("/addhanger/create")
     public String createHanger(@Valid @ModelAttribute("Hanger") HangerDetails H, BindingResult BS, Model M) {
-        if (BS.hasErrors()) {
-            return "AddHanger";
-        } else {
+        if (!BS.hasErrors()) {
             String msg = "";
             if (databaseDao.ManagerEmailExists(H.getEmail())) {
                 msg = "Email Already Taken";
@@ -179,28 +180,65 @@ public class HomeController {
                 msg = "Mobile Number Already Taken";
             } else msg = databaseDao.AddHanger(H);
             M.addAttribute("msg", msg);
-            return "AddHanger";
         }
+        return "AddHanger";
     }
 
     @RequestMapping("/allotplane")
     public String AllotingPlane(Model M) {
-        hangarList = databaseDao.loadHangars().stream().filter(T-> T.getStatus().equals("Available")).collect(Collectors.toList());
-        airplaneList = databaseDao.loadAirplanes().stream().filter(T-> T.getStatus().equals("Available")).collect(Collectors.toList());
+        hangarList = databaseDao.loadHangars().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+        airplaneList = databaseDao.loadAirplanes().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
         M.addAttribute("AList", airplaneList);
         M.addAttribute("HangerAllo", new HangerAllocation());
         M.addAttribute("hangarList", hangarList);
         return "AllocatingPlane";
     }
+
     @RequestMapping("/allotplane/create")
-    public String CreateHangarAllocation(Model M, @RequestParam("hangarRadio") String hangarID, @Valid @ModelAttribute("HangerAllo") HangerAllocation hangerAllocation) {
-        hangerAllocation.setHangarId(Long.parseLong(hangarID));
-        hangarList = databaseDao.loadHangars().stream().filter(T-> T.getStatus().equals("Available")).collect(Collectors.toList());
-        airplaneList = databaseDao.loadAirplanes().stream().filter(T-> T.getStatus().equals("Available")).collect(Collectors.toList());
+    public String CreateHangarAllocation(Model M, @RequestParam("hangarRadio") String hangarID, @Valid @ModelAttribute("HangerAllo") HangerAllocation hangerAllocation, BindingResult BS) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        hangarList = databaseDao.loadHangars().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+        airplaneList = databaseDao.loadAirplanes().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+        String msg = "";
+        if (!BS.hasErrors()) {
+            if (LocalDate.parse(hangerAllocation.getFromDate(), formatter).isBefore(LocalDate.now())) {
+                msg = "Wrong From Date Input";
+                M.addAttribute("msg", msg);
+            } else if (!hangerAllocation.getToDate().isEmpty() && LocalDate.parse(hangerAllocation.getToDate(), formatter).isBefore(LocalDate.parse(hangerAllocation.getFromDate(), formatter))) {
+                msg = "Wrong To Date Input";
+                M.addAttribute("msg", msg);
+            } else if (hangerAllocation.getAirplaneId() == null) {
+                msg = "Plane ID required";
+                M.addAttribute("msg", msg);
+            } else if (hangerAllocation.getToDate().isEmpty()) {
+                hangerAllocation.setToDate(hangerAllocation.getFromDate());
+                hangerAllocation.setHangarId(Long.parseLong(hangarID));
+                hangarList = databaseDao.loadHangars().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+                airplaneList = databaseDao.loadAirplanes().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+                M.addAttribute("AList", airplaneList);
+                M.addAttribute("hangarList", hangarList);
+                msg = databaseDao.AddHangerAllocation(hangerAllocation);
+                M.addAttribute("msg", msg);
+            } else {
+                hangerAllocation.setHangarId(Long.parseLong(hangarID));
+                hangarList = databaseDao.loadHangars().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+                airplaneList = databaseDao.loadAirplanes().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+                M.addAttribute("AList", airplaneList);
+                M.addAttribute("hangarList", hangarList);
+                msg = databaseDao.AddHangerAllocation(hangerAllocation);
+                M.addAttribute("msg", msg);
+            }
+        }
+        hangarList = databaseDao.loadHangars().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
+        airplaneList = databaseDao.loadAirplanes().stream().filter(T -> T.getStatus().equals("Available")).collect(Collectors.toList());
         M.addAttribute("AList", airplaneList);
         M.addAttribute("hangarList", hangarList);
-        String msg = databaseDao.AddHangerAllocation(hangerAllocation);
-        M.addAttribute("msg", msg);
         return "AllocatingPlane";
+    }
+    @RequestMapping("/gethangerstatus")
+    public String GetHangerStatusList(Model M) {
+        List<HangerDetails> hangerDetailsList = databaseDao.loadHangarAllos();
+        M.addAttribute("hangarDetailsList",hangerDetailsList);
+        return "GetHangarStatus";
     }
 }

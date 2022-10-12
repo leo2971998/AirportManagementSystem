@@ -26,7 +26,7 @@
             <ul>
                 <li><a href="/validatelogin">Home</a></li>
                 <li><a href="/allotplane">Allot Plane</a></li>
-                <li><a href="#">Get Hangar Status</a></li>
+                <li><a href="/gethangerstatus">Get Hangar Status</a></li>
                 <li><a href="/">Log Out</a></li>
             </ul>
         </div>
